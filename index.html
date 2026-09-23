@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цифровая летопись: Городище Кент</title>
+    
+    <!-- Подключение стилей для карты Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        :root {
+            --primary: #8b3a3a; /* Терракотовый/бордовый цвет */
+            --bg-color: #f9f7f1;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        h1, h2 { margin: 0; padding-bottom: 10px; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Стили для блока с картой */
+        .map-section {
+            margin-bottom: 4rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 8px;
+            z-index: 1;
+        }
+
+        /* Стили для хронологической ленты */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: var(--primary);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        .timeline-item.left { left: 0; text-align: right; }
+        .timeline-item.right { left: 50%; }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: white;
+            border: 4px solid var(--primary);
+            top: 25px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .timeline-item.right::after { left: -10px; }
+
+        .timeline-content {
+            padding: 20px;
+            background-color: white;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .timeline-date {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .timeline-img {
+            max-width: 100%;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .timeline::after { left: 31px; }
+            .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .timeline-item.left { text-align: left; }
+            .timeline-item.left::after, .timeline-item.right::after { left: 21px; }
+            .timeline-item.right { left: 0%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Цифровая летопись моего края</h1>
+        <p>Виртуальная экскурсия: Городище Кент</p>
+    </header>
+
+    <div class="container">
+        <!-- Секция Карты -->
+        <section class="map-section">
+            <h2>Интерактивная карта</h2>
+            <p>Маршрут по территории древнего протогорода (площадь 30 га).</p>
+            <div id="map"></div>
+        </section>
+
+        <!-- Секция Таймлайна -->
+        <section>
+            <h2 style="text-align: center; margin-bottom: 2rem;">Хронология развития</h2>
+            <div class="timeline">
+                
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <div class="timeline-date">XIII–IX вв. до н.э.</div>
+                        <h3>Расцвет Кента</h3>
+                        <p>Функционирование поселения как крупного протогородского центра бронзового века.</p>
+                        <img src="керамическая посуда.jpeg" alt="Керамическая посуда" class="timeline-img">
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <div class="timeline-date">IX–VIII вв. до н.э.</div>
+                        <h3>Угасание жизни</h3>
+                        <p>Постепенное снижение активности и оставление поселения жителями.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Средние века</div>
+                        <h3>Зимнее пастбище</h3>
+                        <p>Использование долины Кызылкеныш как сезонных сельскохозяйственных угодий.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <div class="timeline-date">XVI–XVII вв.</div>
+                        <h3>Кызыл-Кентский дворец</h3>
+                        <p>Строительство архитектурного комплекса (по одной из версий — памятника джунгарской эпохи).</p>
+                        <img src="дворец.jpg" alt="Кызылкентский дворец" class="timeline-img">
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <div class="timeline-date">XIX век</div>
+                        <h3>Первые упоминания</h3>
+                        <p>Появление первых письменных свидетельств о развалинах в долине.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <div class="timeline-date">1984 год</div>
+                        <h3>Открытие городища</h3>
+                        <p>Обнаружение поселения археологами Карагандинского университета.</p>
+                        <img src="кент.jpeg" alt="Раскопки городища Кент" class="timeline-img">
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <div class="timeline-date">1985–2012 гг.</div>
+                        <h3>Систематические раскопки</h3>
+                        <p>Многолетние исследования под руководством археолога В.В. Варфоломеева.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2017 год</div>
+                        <h3>Издание монографии</h3>
+                        <p>Публикация фундаментального труда «Кент – город бронзового века в центре Казахских степей».</p>
+                        <img src="обложка книги.jpg" alt="Обложка монографии" class="timeline-img">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- Подключение скрипта для карты Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([49.20182, 75.94034], 15);
+
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri'
+        }).addTo(map);
+
+        const bounds = [
+            [49.204, 75.937],
+            [49.204, 75.943],
+            [49.199, 75.943],
+            [49.199, 75.937]
+        ];
+        L.polygon(bounds, {color: '#8b3a3a', fillOpacity: 0.2, weight: 2}).addTo(map)
+         .bindPopup('Территория поселения (приблизительно 30 га)');
+        
+        // 1. Долина
+        L.marker([49.20182, 75.94034]).addTo(map)
+         .bindPopup('<b>1. Долина Кызылкеныш</b><br>«Красная сокровищница». Начало экскурсии.<br><img src="Долина Кызылкеныш.jpg" style="width:100%; margin-top:5px;">');
+
+        // 2. Квартал металлургов
+        L.marker([49.2025, 75.9415]).addTo(map)
+         .bindPopup('<b>2. Квартал металлургов</b><br>Место обработки меди и бронзы.<br><img src="кент.jpeg" style="width:100%; margin-top:5px;">');
+
+        // 3. Большие ограды
+        L.marker([49.2005, 75.9385]).addTo(map)
+         .bindPopup('<b>3. «Большие ограды»</b><br>Культовые сооружения.<br><img src="стены.jpg" style="width:100%; margin-top:5px;">');
+
+        // 4. Некрополь
+        L.marker([49.2030, 75.9360]).addTo(map)
+         .bindPopup('<b>4. Некрополь Кент I</b><br>Древние погребальные комплексы.<br><img src="Некрополь Кент I.jpg" style="width:100%; margin-top:5px;">');
+
+        // 5. Дворец
+        L.marker([49.1980, 75.9420]).addTo(map)
+         .bindPopup('<b>5. Кызыл-Кентский дворец</b><br>Загадочный памятник.<br><img src="дворец.jpg" style="width:100%; margin-top:5px;">');
+
+        const routePoints = [
+            [49.20182, 75.94034], 
+            [49.2025, 75.9415],   
+            [49.2005, 75.9385],   
+            [49.2030, 75.9360],   
+            [49.1980, 75.9420]    
+        ];
+        L.polyline(routePoints, {color: '#ffcc00', weight: 4, dashArray: '5, 10'}).addTo(map);
+    </script>
+</body>
+</html>
